@@ -1,0 +1,71 @@
+--LuasuV1.5_UI
+
+getgenv().SecureMode = false
+local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+local Window = Rayfield:CreateWindow({
+    Name = "LuasuV1.5 bot controller",
+    LoadingTitle = "LuasuV1.5 bot controller",
+    LoadingSubtitle = "Made with ❤️ by @thereal_asu",
+    ConfigurationSaving = {
+       Enabled = true,
+       FolderName = nil,
+       FileName = "Big Hub"
+    },
+    Discord = {
+       Enabled = false,
+       Invite = "noinvitelink",
+       RememberJoins = true
+    },
+    KeySystem = false,
+    KeySettings = {
+       Title = "Untitled",
+       Subtitle = "Key System",
+       Note = "No method of obtaining the key is provided",
+       FileName = "Key",
+       SaveKey = true,
+       GrabKeyFromSite = false,
+       Key = {"Hello"}
+    }
+ })
+
+ --Tabs
+local GeneralTab = Window:CreateTab("General", 4483362458)
+local GlobalTab = Window:CreateTab("Global", 4483362458)
+local UsualTab = Window:CreateTab("Usual", 4483362458)
+local FunnyTab = Window:CreateTab("Funny", 4483362458)
+local MiscTab = Window:CreateTab("Misc", 4483362458)
+local OffensiveTab = Window:CreateTab("Offensive", 4483362458)
+local CommunicationTab = Window:CreateTab("Communication", 4483362458)
+local OtherTab = Window:CreateTab("Other", 4483362458)
+local ShapeTab = Window:CreateTab("Shape", 4483362458)
+local HelpTab = Window:CreateTab("Help", 4483362458)
+local AboutTab = Window:CreateTab("About", 4483362458)
+
+--var
+local LoadGUI = false
+--function
+local function LoadGUI()
+    while not LoadGUI do
+        wait(0.1)
+    end
+    if LoadGUI = false then
+
+    else
+        local Section = GeneralTab:CreateSection("Bots")
+
+        local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "execute the script again, wait a few seconds and press load again"})
+    end
+end
+
+--GeneralTab + LOAD GUI
+local Section = GeneralTab:CreateSection("General")
+local Paragraph = GeneralTab:CreateParagraph({Title = "Please Read:", Content = "make sure your exploit has been injected into all bots before pressing load"})
+local Button = GeneralTab:CreateButton({
+    Name = "Load",
+    Callback = function()
+        test = true
+    end,
+ })
+
+LoadGUI()
