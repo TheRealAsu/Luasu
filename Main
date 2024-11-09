@@ -1,14 +1,149 @@
---LuasuV1.5_UI
+--[[
+    Version: LuasuV1.5 [PREVIEW ONLY]
 
-getgenv().SecureMode = false
+    Made by:
+    -   @thereal_asu
+
+
+    Note:
+    -   if you're here, it's probably to get some code so don't forget to
+        credit me if you take code from here to make a script related to bots please :)
+        Have fun making sense of all this mess
+
+
+    Tip: ctrl + F to search for what you need
+
+    Summary:
+
+        KEYWORD                      INFO
+
+    -   Global Services              | Service Roblox used for bots and Owner
+    -   Global variables             | Variables used by bots and owner
+    -   Global Functions             | Functions Variables used by bots and owner
+    -   Main Script                  | where the script differentiates between a “bot” instance and an “Owner” instance and distributes 2 different scripts
+    -   GlobalTab                    |
+    -   UsualTab                     |
+    -   FunnyTab                     |
+    -   MiscTab                      |
+    -   OffensiveTab                 |
+    -   CommunicationTab             |
+    -   OtherTab                     |
+    -   ShapeTab                     |
+    -   HelpTab                      |
+    -   AboutTab                     |
+    -   BOT PART                     | where the bot script part of the script begins
+    -   FINAL END                    | The end of the 'Main Script'
+    -   COMMANDS ID                  | all command IDs
+    -   Bot services                 |
+    -   Bot variables                |
+    -   Bot functions                |
+    -   TOKEN                        | to differentiate commands
+    -   LISTEN TO EXECUTOR VARIABLES | the part of the bots' script that listens to the commands sent by the Owner
+    -   Command controller           | the place where the bot will execute functions based on commands
+    -   
+    -   
+                    UNFINISHED
+
+
+]]
+
+-- Global Services
+local VirtualUser = game:GetService("VirtualUser")
+
+-- Global variables
+Xeno.SetGlobal("__cmd", { 
+    ["Idcmd"] = "Idcmd_data",
+    ["Token"] = "Token_data",
+    ["arg1"] = nil
+})
+
+local player = game.Players.LocalPlayer
+local connection
+
+local IDcommands = { -- COMMANDS ID, don't ask me why i used IDs instead of maybe doing something simpler, but I wanted to give it a try
+    status = 0001, index = 0002, admin = 0003, undamin = 0004, quit = 0005, set = 0006, prefix = 0007, fix = 0008, fps = 0009, 
+    ["anti-afk"] = 0010, collision = 0011, follow = 0012, unfollow = 0013, ["goto"] = 0014, dance = 0015, ws = 0016, reset = 0017, 
+    jump = 0018, undance = 0019, orbit = 0020, orbit2 = 0021, orbit3 = 0022, orbit4 = 0023, orbit5 = 0024, orbit6 = 0025, orbit7 = 0026, 
+    orbit8 = 0027, orbit9 = 0028, unorbit = 0029, fling = 0030, rocket = 0031, worm = 0032, unworm = 0033, spin = 0034, unspin = 0035, 
+    fans = 0036, unfans = 0037, clone = 0038, unclone = 0039, tower = 0040, untower = 0041, stalk = 0042, unstalk = 0043, sayfps = 0044, 
+    channel = 0045, say = 0046, botrender = 0047, loopjump = 0048, unloopjump = 0049, press = 0050, surround = 0051, arch = 0052, 
+    wcircle = 0053, walign = 0054, warch = 0055, wings = 0056, circle = 0057, align = 0058, atomize = 0059, freaky = 0060, 
+    unfreaky = 0061, bang = 0062, gbang = 0063, unbang = 0064, ungbang = 0065
+}
+
+local folderName = "LuasuV1.5"
+local fileName = "BotIndex.txt"
+local filePath = folderName .. "/" .. fileName
+
+-- flip the table, thanks for the tip 
+local commandsByID = {}
+for cmd, id in pairs(IDcommands) do
+    commandsByID[id] = cmd
+end
+
+-- Global Functions
+local function getcmdID(command)
+    return IDcommands[command] or "no cmd"
+end
+
+local function getcmdfromID(id)
+    return commandsByID[id] or "no id"
+end
+
+local function enableAntiAFK()
+    if not connection then
+    print("anti-afk ON")
+        connection = player.Idled:Connect(function()
+            if getgenv().afk6464 then
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end
+        end)
+    end
+end
+
+local function disableAntiAFK()
+    if connection then
+        connection:Disconnect()
+        connection = nil
+        print("Anti-AFK OFF")
+    end
+end
+
+local function loop()
+    while true do
+        if getgenv().afk6464 then
+            enableAntiAFK()
+        else
+            disableAntiAFK()
+        end
+        wait(1)
+    end
+end
+
+-- Main Script
+if game.Players.LocalPlayer.Name == getgenv().Owner then
+
+--set up bots
+if not isfolder(folderName) then
+    makefolder(folderName)
+else
+end
+
+if not isfile(filePath) then
+    writefile(filePath, " ")
+else
+end
+
+--Interface
 local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 
 local Window = Rayfield:CreateWindow({
-    Name = "LuasuV1.5 bot controller",
-    LoadingTitle = "LuasuV1.5 bot controller",
+    Name = "LuasuV1.5 bot controller [TEST VERSION]",
+    LoadingTitle = "LuasuV1.5 bot controller [TEST VERSION]",
     LoadingSubtitle = "Made with ❤️ by @thereal_asu",
     ConfigurationSaving = {
-       Enabled = true,
+       Enabled = false,
        FolderName = nil,
        FileName = "Big Hub"
     },
@@ -29,43 +164,249 @@ local Window = Rayfield:CreateWindow({
     }
  })
 
- --Tabs
+-- Tab before load
 local GeneralTab = Window:CreateTab("General", 4483362458)
-local GlobalTab = Window:CreateTab("Global", 4483362458)
-local UsualTab = Window:CreateTab("Usual", 4483362458)
-local FunnyTab = Window:CreateTab("Funny", 4483362458)
-local MiscTab = Window:CreateTab("Misc", 4483362458)
-local OffensiveTab = Window:CreateTab("Offensive", 4483362458)
-local CommunicationTab = Window:CreateTab("Communication", 4483362458)
-local OtherTab = Window:CreateTab("Other", 4483362458)
-local ShapeTab = Window:CreateTab("Shape", 4483362458)
-local HelpTab = Window:CreateTab("Help", 4483362458)
-local AboutTab = Window:CreateTab("About", 4483362458)
 
---var
-local LoadGUI = false
---function
-local function LoadGUI()
-    while not LoadGUI do
-        wait(0.1)
+-- variables
+loadGUI = true
+local Fetching = true
+local FetchingBotsNumber = 0
+
+--local Setcmd = Xeno.SetGlobal("__cmd") --f**k you
+local Getcmd = Xeno.GetGlobal("__cmd")
+
+-- functions
+local function readLines(filePath)
+    if not isfile(filePath) then
+        return {}
     end
-    if LoadGUI = false then
 
-    else
-        local Section = GeneralTab:CreateSection("Bots")
+    local fileContent = readfile(filePath)
+    return string.split(fileContent, "\n")
+end
 
-        local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "execute the script again, wait a few seconds and press load again"})
+local function Botlabel()
+    local lines = readLines(filePath)
+    if #lines < 3 then
+        return
+    end
+
+    for i = 2, #lines - 1 do
+        local lineContent = lines[i]
+        local lineNumber = i - 1
+        local labelContent = "Bot: "..lineContent .. " Index: " .. lineNumber
+        local Label = GeneralTab:CreateLabel(labelContent)
     end
 end
 
---GeneralTab + LOAD GUI
+local function countLines(filePath)
+    if not isfile(filePath) then
+        return 0
+    end
+
+    local fileContent = readfile(filePath)
+    local lines = string.split(fileContent, "\n")
+    return #lines
+end
+
+local function generateToken() -- TOKEN, to differentiate commands, so that they are not executed more than once
+    local charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_"
+    local tokenLength = 16
+    local token = ""
+
+    for i = 1, tokenLength do
+        local randIndex = math.random(1, #charset)
+        token = token .. charset:sub(randIndex, randIndex)
+    end
+
+    return token
+end
+
+local function LoadGUI() -- AFTER LOAD
+    loadGUI = false -- make it so you can only load the interface once
+
+-- GeneralTab
+    local Section = GeneralTab:CreateSection("Bots") -- BOTS STATUS, INDEX
+
+    Botlabel() --load label for each bot
+
+    local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "Execute the script again, wait a few seconds and press load again"})
+    local Section = GeneralTab:CreateSection("For Main Instance")
+    local Button = GeneralTab:CreateButton({
+        Name = "Load Infinite Yield",
+        Callback = function()
+            loadstring(game:HttpGet('https://raw.githubusercontent.com/edgeiy/infiniteyield/master/source'))()
+    end,
+    })
+
+    local Toggle = GeneralTab:CreateToggle({
+        Name = "Anti-AFK",
+        CurrentValue = false,
+        Flag = "Toggle1",
+        Callback = function(Value)
+            spawn(loop)
+            getgenv().afk6464 = Value
+        end,
+     })
+
+    --tabs after load
+    local GlobalTab = Window:CreateTab("Global", 4483362458)
+    local UsualTab = Window:CreateTab("Usual", 4483362458)
+    local FunnyTab = Window:CreateTab("Funny", 4483362458)
+    local MiscTab = Window:CreateTab("Misc", 4483362458)
+    local OffensiveTab = Window:CreateTab("Offensive", 4483362458)
+    local CommunicationTab = Window:CreateTab("Communication", 4483362458)
+    local OtherTab = Window:CreateTab("Other", 4483362458)
+    local ShapeTab = Window:CreateTab("Shape", 4483362458)
+    local HelpTab = Window:CreateTab("Help", 4483362458)
+    local AboutTab = Window:CreateTab("About", 4483362458)
+
+--GlobalTab
+    local Section = GlobalTab:CreateSection("Global")
+    local Toggle = GlobalTab:CreateToggle({
+        Name = "Anti-AFK",
+        CurrentValue = false,
+        Flag = "Toggle1",
+        Callback = function(Value)
+            local command = "anti-afk"
+            local commandID = getcmdID(command)
+            local AToken = generateToken()
+            Xeno.SetGlobal("__cmd", {
+                ["Idcmd"] = commandID,
+                ["Token"] = AToken,
+                ["arg1"] = Value
+            })
+        end,
+     })
+--UsualTab
+--FunnyTab
+--MiscTab
+--OffensiveTab
+--CommunicationTab
+    local Section = CommunicationTab:CreateSection("Communication")
+    local Input = CommunicationTab:CreateInput({
+        Name = "Say",
+        PlaceholderText = "Text",
+        RemoveTextAfterFocusLost = false,
+        Callback = function(Text)
+            local command = "say"
+            local commandID = getcmdID(command)
+            local Token = generateToken()
+            Xeno.SetGlobal("__cmd", {
+                ["Idcmd"] = commandID,
+                ["Token"] = Token,
+                ["arg1"] = Text
+            })
+        end,
+    })
+--OtherTab
+--ShapeTab
+--HelpTab
+
+--AboutTab
+    local Section = AboutTab:CreateSection("Credit")
+    local Label = AboutTab:CreateLabel("Original owner: @thereal_asu")
+    local Section = AboutTab:CreateSection("Join the community!")
+    local Button = AboutTab:CreateButton({
+            Name = "Copy Discord",
+            Callback = function()
+            setclipboard("https://discord.gg/uGhnBu89SM")
+        end,
+    })
+    local Section = AboutTab:CreateSection("Info")
+    local Paragraph = AboutTab:CreateParagraph({Title = "About this script", Content = "This script is one of my projects that I'm taking time to make, I'm leaving it open source to allow people to check if this script is trusted, but also to let people learn the different techniques used in this script to do specific things. Please don't be a bad “skid” and credit me if you use this script to create your own bot script or something related to bot script. It's ok to copy and paste my work for your script or improve my script to your own style, to suggest different versions of it, but please respect me, respect my work and have fun."})
+end -- end of the load
+
+-- GeneralTab before load
 local Section = GeneralTab:CreateSection("General")
-local Paragraph = GeneralTab:CreateParagraph({Title = "Please Read:", Content = "make sure your exploit has been injected into all bots before pressing load"})
+local Paragraph = GeneralTab:CreateParagraph({Title = "Please Read:", Content = "make sure your exploit has been injected into all bots Instance before pressing load. Only press 'load' when the counter indicates the number of bots you have"})
+local BotFound = GeneralTab:CreateLabel("bot instance found: "..FetchingBotsNumber)
 local Button = GeneralTab:CreateButton({
     Name = "Load",
     Callback = function()
-        test = true
+        Fetching = false -- stop fetching bots
+        if loadGUI == true then
+        LoadGUI()      
+        end
     end,
  })
 
-LoadGUI()
+ Rayfield:Notify({
+    Title = "Hello "..player.Name,
+    Content = "Make sure your exploit is injected into all your bots.",
+    Duration = 4.9,
+    Image = 4483362458,
+    Actions = {
+ },
+ })
+
+wait(2) -- gives the folder time to be created
+while Fetching do
+    local lineCount = countLines(filePath) 
+    FetchingBotsNumber = math.max(0, lineCount)
+    local realahhhhbotnumber = FetchingBotsNumber - 2 -- -2 because the first and last lines is unusable
+    if realahhhhbotnumber == 1 then
+    BotFound:Set("bot instance found: "..realahhhhbotnumber)
+    else
+    BotFound:Set("bots instances found: "..realahhhhbotnumber)
+    end
+    wait(0.1)
+end
+
+
+
+
+else -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART
+
+
+
+
+wait(math.random(1, 10)) -- to allow time for files to be created NEED TO FIX
+writefile(filePath, " " .. "\n")
+appendfile(filePath, player.Name .. "\n")
+
+
+-- Bot services
+local TextChatService = game:GetService("TextChatService")
+
+-- Bot variables
+
+-- Bot functions
+local function chatMessage(str)
+    str = tostring(str)
+    if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+        TextChatService.TextChannels.RBXGeneral:SendAsync(str)
+    else
+        ReplicatedStorage.DefaultChatSystemChatEvents.SayMessageRequest:FireServer(str, "All")
+    end
+end
+
+local function listentoOwner()
+    local localToken = "autistic/acoustic"
+
+    while true do
+        wait(0.01)
+        local Getcmd = Xeno.GetGlobal("__cmd") or {}
+        local arg1 = Getcmd["arg1"] or ""
+        local idcmd = Getcmd["Idcmd"]
+
+        if Getcmd["Token"] ~= localToken then
+            --print("new CMDD Detected!")
+            localToken = Getcmd["Token"]
+
+            if idcmd == 46 then -- say
+                chatMessage(arg1)
+
+            elseif idcmd == 10 then -- anti-afk
+            getgenv().afk6464 = arg1
+            spawn(loop)
+
+            elseif idcmd == 0 then
+            end
+        end
+    end
+end
+
+spawn(function() listentoOwner() end)
+
+end -- FINAL END
