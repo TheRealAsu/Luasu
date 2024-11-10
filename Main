@@ -1,3 +1,5 @@
+--LuasuV1.5
+
 --[[
     Version: LuasuV1.5 [PREVIEW ONLY]
 
@@ -20,7 +22,7 @@
     -   Global Services              | Service Roblox used for bots and Owner
     -   Global variables             | Variables used by bots and owner
     -   Global Functions             | Functions Variables used by bots and owner
-    -   Main Script                  | where the script differentiates between a “bot” instance and an “Owner” instance and distributes 2 different scripts
+    -   Main Script                  | where the script differentiates between a "bot" instance and an "Owner" instance and distributes 2 different scripts
     -   GlobalTab                    |
     -   UsualTab                     |
     -   FunnyTab                     |
@@ -51,14 +53,14 @@
 local VirtualUser = game:GetService("VirtualUser")
 
 -- Global variables
+local player = game.Players.LocalPlayer
+local connection
+
 Xeno.SetGlobal("__cmd", { 
     ["Idcmd"] = "Idcmd_data",
     ["Token"] = "Token_data",
     ["arg1"] = nil
 })
-
-local player = game.Players.LocalPlayer
-local connection
 
 local IDcommands = { -- COMMANDS ID, don't ask me why i used IDs instead of maybe doing something simpler, but I wanted to give it a try
     status = 0001, index = 0002, admin = 0003, undamin = 0004, quit = 0005, set = 0006, prefix = 0007, fix = 0008, fps = 0009, 
@@ -72,8 +74,12 @@ local IDcommands = { -- COMMANDS ID, don't ask me why i used IDs instead of mayb
 }
 
 local folderName = "LuasuV1.5"
-local fileName = "BotIndex.txt"
+local fileName = game.Players.LocalPlayer.Name
 local filePath = folderName .. "/" .. fileName
+
+if isfolder(folderName) then --so the folder is resete
+    delfolder(folderName)
+end
 
 -- flip the table, thanks for the tip 
 local commandsByID = {}
@@ -124,15 +130,10 @@ end
 -- Main Script
 if game.Players.LocalPlayer.Name == getgenv().Owner then
 
---set up bots
+--set up folder
+wait(2.5)
 if not isfolder(folderName) then
     makefolder(folderName)
-else
-end
-
-if not isfile(filePath) then
-    writefile(filePath, " ")
-else
 end
 
 --Interface
@@ -171,6 +172,7 @@ local GeneralTab = Window:CreateTab("General", 4483362458)
 loadGUI = true
 local Fetching = true
 local FetchingBotsNumber = 0
+local bots = {}
 
 --local Setcmd = Xeno.SetGlobal("__cmd") --f**k you
 local Getcmd = Xeno.GetGlobal("__cmd")
@@ -183,30 +185,6 @@ local function readLines(filePath)
 
     local fileContent = readfile(filePath)
     return string.split(fileContent, "\n")
-end
-
-local function Botlabel()
-    local lines = readLines(filePath)
-    if #lines < 3 then
-        return
-    end
-
-    for i = 2, #lines - 1 do
-        local lineContent = lines[i]
-        local lineNumber = i - 1
-        local labelContent = "Bot: "..lineContent .. " Index: " .. lineNumber
-        local Label = GeneralTab:CreateLabel(labelContent)
-    end
-end
-
-local function countLines(filePath)
-    if not isfile(filePath) then
-        return 0
-    end
-
-    local fileContent = readfile(filePath)
-    local lines = string.split(fileContent, "\n")
-    return #lines
 end
 
 local function generateToken() -- TOKEN, to differentiate commands, so that they are not executed more than once
@@ -228,7 +206,9 @@ local function LoadGUI() -- AFTER LOAD
 -- GeneralTab
     local Section = GeneralTab:CreateSection("Bots") -- BOTS STATUS, INDEX
 
-    Botlabel() --load label for each bot
+    for index, botName in pairs(bots) do
+        local Label = GeneralTab:CreateLabel("User: "..botName .. " index: " .. index)
+    end
 
     local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "Execute the script again, wait a few seconds and press load again"})
     local Section = GeneralTab:CreateSection("For Main Instance")
@@ -249,7 +229,7 @@ local function LoadGUI() -- AFTER LOAD
         end,
      })
 
-    --tabs after load
+--tabs after load
     local GlobalTab = Window:CreateTab("Global", 4483362458)
     local UsualTab = Window:CreateTab("Usual", 4483362458)
     local FunnyTab = Window:CreateTab("Funny", 4483362458)
@@ -282,6 +262,7 @@ local function LoadGUI() -- AFTER LOAD
 --FunnyTab
 --MiscTab
 --OffensiveTab
+
 --CommunicationTab
     local Section = CommunicationTab:CreateSection("Communication")
     local Input = CommunicationTab:CreateInput({
@@ -324,7 +305,7 @@ local BotFound = GeneralTab:CreateLabel("bot instance found: "..FetchingBotsNumb
 local Button = GeneralTab:CreateButton({
     Name = "Load",
     Callback = function()
-        Fetching = false -- stop fetching bots
+        Fetching = false -- stop fetching bots instances
         if loadGUI == true then
         LoadGUI()      
         end
@@ -340,36 +321,42 @@ local Button = GeneralTab:CreateButton({
  },
  })
 
-wait(2) -- gives the folder time to be created
-while Fetching do
-    local lineCount = countLines(filePath) 
-    FetchingBotsNumber = math.max(0, lineCount)
-    local realahhhhbotnumber = FetchingBotsNumber - 2 -- -2 because the first and last lines is unusable
-    if realahhhhbotnumber == 1 then
-    BotFound:Set("bot instance found: "..realahhhhbotnumber)
-    else
-    BotFound:Set("bots instances found: "..realahhhhbotnumber)
+ wait(2)
+ if isfolder(folderName) then
+    for _, fileName in ipairs(listfiles(folderName)) do
+        local name = fileName:match("([^/]+)$")
+        table.insert(bots, name)
     end
-    wait(0.1)
+else
+    warn("Luasu | non-existent folder")
 end
 
-
+while Fetching do
+    wait(0.1)
+    BotFound:Set("bot instance found: "..#bots)
+        local botindexTAABLE = {}
+        for i, botName in ipairs(bots) do
+            botindexTAABLE[tostring(i)] = botName
+        end
+        Xeno.SetGlobal("__Index", botindexTAABLE)
+end
 
 
 else -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART -- BOT PART
 
+wait(4)
+if not isfile(filePath) then
+    writefile(filePath, " ")
+end
 
-
-
-wait(math.random(1, 10)) -- to allow time for files to be created NEED TO FIX
-writefile(filePath, " " .. "\n")
-appendfile(filePath, player.Name .. "\n")
-
+wait(5)
 
 -- Bot services
 local TextChatService = game:GetService("TextChatService")
 
 -- Bot variables
+local botIndexTable = Xeno.GetGlobal("__Index")
+local BotIndex = nil
 
 -- Bot functions
 local function chatMessage(str)
@@ -381,6 +368,20 @@ local function chatMessage(str)
     end
 end
 
+if type(botIndexTable) == "table" then
+    for key, name in pairs(botIndexTable) do
+        if name == player.Name then
+            BotIndex = key
+            break
+        end
+    end
+
+    if BotIndex then
+        --chatMessage("Index: " .. BotIndex)
+    end
+end
+
+--INITIALIZE
 local function listentoOwner()
     local localToken = "autistic/acoustic"
 
