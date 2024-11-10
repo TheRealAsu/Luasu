@@ -377,7 +377,7 @@ if type(botIndexTable) == "table" then
     end
 
     if BotIndex then
-        --chatMessage("Index: " .. BotIndex)
+        chatMessage("Index: " .. BotIndex)
     end
 end
 
