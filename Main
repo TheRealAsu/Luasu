@@ -1,4 +1,4 @@
---LuasuV1.5
+-- LuasuV1.5
 
 --[[
     Version: LuasuV1.5 [PREVIEW ONLY]
@@ -77,7 +77,7 @@ local folderName = "LuasuV1.5"
 local fileName = game.Players.LocalPlayer.Name
 local filePath = folderName .. "/" .. fileName
 
-if isfolder(folderName) then --so the folder is resete
+if isfolder(folderName) then --so the folder is reseted
     delfolder(folderName)
 end
 
@@ -210,7 +210,7 @@ local function LoadGUI() -- AFTER LOAD
         local Label = GeneralTab:CreateLabel("User: "..botName .. " index: " .. index)
     end
 
-    local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "Execute the script again, wait a few seconds and press load again"})
+    local Paragraph = GeneralTab:CreateParagraph({Title = "any issue ?", Content = "Execute the script again, wait a few seconds and press load again. Problem still persists? close your executor, re-open it and run the script"})
     local Section = GeneralTab:CreateSection("For Main Instance")
     local Button = GeneralTab:CreateButton({
         Name = "Load Infinite Yield",
@@ -258,7 +258,26 @@ local function LoadGUI() -- AFTER LOAD
             })
         end,
      })
+
 --UsualTab
+local Section = UsualTab:CreateSection("Usual")
+local Input = UsualTab:CreateInput({
+    Name = "goto [plr]",
+    PlaceholderText = "Player Name",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(player)
+        local command = "goto"
+        local commandID = getcmdID(command)
+        local AToken = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = AToken,
+            ["arg1"] = player
+        })
+        print(player)
+    end,
+ })
+
 --FunnyTab
 --MiscTab
 --OffensiveTab
@@ -296,6 +315,8 @@ local function LoadGUI() -- AFTER LOAD
     })
     local Section = AboutTab:CreateSection("Info")
     local Paragraph = AboutTab:CreateParagraph({Title = "About this script", Content = "This script is one of my projects that I'm taking time to make, I'm leaving it open source to allow people to check if this script is trusted, but also to let people learn the different techniques used in this script to do specific things. Please don't be a bad “skid” and credit me if you use this script to create your own bot script or something related to bot script. It's ok to copy and paste my work for your script or improve my script to your own style, to suggest different versions of it, but please respect me, respect my work and have fun."})
+    
+    getgenv().Luasu = true
 end -- end of the load
 
 -- GeneralTab before load
@@ -349,6 +370,10 @@ if not isfile(filePath) then
     writefile(filePath, " ")
 end
 
+if getgenv().Luasu == true then
+    return
+end
+
 wait(5)
 
 -- Bot services
@@ -358,7 +383,34 @@ local TextChatService = game:GetService("TextChatService")
 local botIndexTable = Xeno.GetGlobal("__Index")
 local BotIndex = nil
 
--- Bot functions
+--Make life easier
+local function findPlayerByName(partialName)
+    print("partialName: "..tostring(partialName))
+    local SpartialName = partialName and tostring(partialName) or "me"
+    print("SpartialName"..SpartialName)
+    if SpartialName == "me" then
+        return game.Players:FindFirstChild(getgenv().Owner)
+    end
+
+    local bestMatch = nil
+    local bestMatchScore = 0
+
+    for _, plr in pairs(game.Players:GetPlayers()) do
+        local nameMatch = plr.Name:lower():find(SpartialName:lower())
+        local displayNameMatch = plr.DisplayName:lower():find(SpartialName:lower())
+
+        if nameMatch or displayNameMatch then
+            local score = (nameMatch and #SpartialName or 0) + (displayNameMatch and #SpartialName or 0)
+            if score > bestMatchScore then
+                bestMatchScore = score
+                bestMatch = plr
+            end
+        end
+    end
+
+    return bestMatch
+end
+-- chatmessage
 local function chatMessage(str)
     str = tostring(str)
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
@@ -368,6 +420,45 @@ local function chatMessage(str)
     end
 end
 
+-- removeVelocity
+local function removeVelocity()
+    for _, v in pairs(player.Character:GetDescendants()) do
+        if v:IsA("BasePart") then
+            v.Velocity = Vector3.new(0, 0, 0)
+            v.RotVelocity = Vector3.new(0, 0, 0)
+        elseif v:IsA("BodyVelocity") then
+            v.Velocity = Vector3.new(0, 0, 0)
+        elseif v:IsA("BodyAngularVelocity") then
+            v.AngularVelocity = Vector3.new(0, 0, 0)
+        elseif v:IsA("BodyPosition") then
+            v.Position = v.Position
+        elseif v:IsA("BodyGyro") then
+            v.CFrame = v.CFrame
+        end
+    end
+  end
+
+-- goto
+local function goto(targetPlayer)
+    if not targetPlayer or not targetPlayer.Character then
+      return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+      return
+    end
+
+    if player and player.Character then
+      local localHumanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+      if localHumanoidRootPart then
+        removeVelocity()
+        localHumanoidRootPart.CFrame = targetHumanoidRootPart.CFrame + Vector3.new(0, 0, 0)
+      end
+    end
+end
+
+-- bot functions for the script
 if type(botIndexTable) == "table" then
     for key, name in pairs(botIndexTable) do
         if name == player.Name then
@@ -402,12 +493,23 @@ local function listentoOwner()
             getgenv().afk6464 = arg1
             spawn(loop)
 
+            elseif idcmd == 14 then -- goto
+            print("arg1: "..arg1)
+            local targetPlayer = findPlayerByName(arg1)
+            if targetPlayer then
+              goto(targetPlayer)
+            else
+                warn("Player not Found: "..targetPlayer)
+            end
+
             elseif idcmd == 0 then
+            
             end
         end
     end
 end
 
 spawn(function() listentoOwner() end)
+getgenv().Luasu = true
 
 end -- FINAL END
