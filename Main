@@ -1,5 +1,3 @@
--- LuasuV1.5
-
 --[[
     Version: LuasuV1.5 [PREVIEW ONLY]
 
@@ -59,7 +57,9 @@ local connection
 Xeno.SetGlobal("__cmd", { 
     ["Idcmd"] = "Idcmd_data",
     ["Token"] = "Token_data",
-    ["arg1"] = nil
+    ["arg1"] = nil,
+    ["arg2"] = nil,
+    ["arg3"] = nil
 })
 
 local IDcommands = { -- COMMANDS ID, don't ask me why i used IDs instead of maybe doing something simpler, but I wanted to give it a try
@@ -242,6 +242,21 @@ local function LoadGUI() -- AFTER LOAD
     local AboutTab = Window:CreateTab("About", 4483362458)
 
 --GlobalTab
+local Section = GlobalTab:CreateSection("Exit script")
+local Button = GlobalTab:CreateButton({
+    Name = "Quit",
+    Callback = function()
+        local command = "quit"
+        local commandID = getcmdID(command)
+        local AToken = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = AToken,
+        })
+        Rayfield:Destroy()
+    end,
+ })
+
     local Section = GlobalTab:CreateSection("Global")
     local Toggle = GlobalTab:CreateToggle({
         Name = "Anti-AFK",
@@ -274,11 +289,42 @@ local Input = UsualTab:CreateInput({
             ["Token"] = AToken,
             ["arg1"] = player
         })
-        print(player)
     end,
  })
 
 --FunnyTab
+local Section = FunnyTab:CreateSection("Orbit")
+local Input = FunnyTab:CreateInput({
+    Name = "orbit [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end, 
+})
+
+local Button = FunnyTab:CreateButton({
+    Name = "unorbit",
+    Callback = function()
+        local command = "unorbit"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+        })
+    end,
+ })
 --MiscTab
 --OffensiveTab
 
@@ -299,8 +345,29 @@ local Input = UsualTab:CreateInput({
             })
         end,
     })
+
 --OtherTab
+
 --ShapeTab
+local Section = ShapeTab:CreateSection("Universal Shapes")
+local Input = ShapeTab:CreateInput({
+    Name = "Circle [plr] [radius]",
+    PlaceholderText = "[plr] [radius]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "circle"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2 = Text:match("([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2
+        })
+    end,
+})
+
 --HelpTab
 
 --AboutTab
@@ -321,7 +388,7 @@ end -- end of the load
 
 -- GeneralTab before load
 local Section = GeneralTab:CreateSection("General")
-local Paragraph = GeneralTab:CreateParagraph({Title = "Please Read:", Content = "make sure your exploit has been injected into all bots Instance before pressing load. Only press 'load' when the counter indicates the number of bots you have"})
+local Paragraph = GeneralTab:CreateParagraph({Title = "Please Read:", Content = "make sure your exploit has been injected into all bots Instance before pressing load. Only press 'load' when the counter indicates the number of bots you have. if it doesn't indicate the number of bots you have, re-execute the script, it won't cause any problems"})
 local BotFound = GeneralTab:CreateLabel("bot instance found: "..FetchingBotsNumber)
 local Button = GeneralTab:CreateButton({
     Name = "Load",
@@ -378,16 +445,33 @@ wait(5)
 
 -- Bot services
 local TextChatService = game:GetService("TextChatService")
+local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
 
 -- Bot variables
+local orbitbool = false
 local botIndexTable = Xeno.GetGlobal("__Index")
 local BotIndex = nil
+local cmdmaster = true
+local indexcircle
+
+local nbbot = 0
+for _ in pairs(botIndexTable) do
+    nbbot = nbbot + 1
+end
+
+coroutine.wrap(function()
+    while not BotIndex do
+        wait(0.1)
+    end
+
+    indexcircle = (360 / nbbot * BotIndex)
+end)()
+
 
 --Make life easier
 local function findPlayerByName(partialName)
-    print("partialName: "..tostring(partialName))
     local SpartialName = partialName and tostring(partialName) or "me"
-    print("SpartialName"..SpartialName)
     if SpartialName == "me" then
         return game.Players:FindFirstChild(getgenv().Owner)
     end
@@ -438,6 +522,86 @@ local function removeVelocity()
     end
   end
 
+  -- orbit from IY but modified
+  local function orbitPlayer(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        print("not playerHumanoidRootPart")
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        print("not targetHumanoidRootPart")
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(0, math.rad(rotation), 0) * CFrame.new(r, 0, 0)
+
+        playerHumanoidRootPart.CFrame = newCFrame
+
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- circle
+local function tpcircle(target, distance)
+    local targetPlayer = Players:FindFirstChild(target)
+    if distance == 0 then distance = 0.0001 end
+
+    if not targetPlayer or not targetPlayer.Character then
+        print("not targetPlayer or not targetPlayer.Character")
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        print("not targetHumanoidRootPart")
+        return
+    end
+
+    local player = Players.LocalPlayer
+    if not player or not player.Character then
+        return
+    end
+
+    local playerHumanoidRootPart = player.Character:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        print("not playerHumanoidRootPart")
+        return
+    end
+
+    removeVelocity()
+
+    local angle = math.rad(indexcircle or 0)
+    local offsetX = distance * math.cos(angle)
+    local offsetZ = distance * math.sin(angle)
+    local newPosition = targetHumanoidRootPart.Position + Vector3.new(offsetX, 0, offsetZ)
+    local newCFrame = CFrame.new(newPosition, targetHumanoidRootPart.Position)
+
+    playerHumanoidRootPart.CFrame = newCFrame
+end
+
 -- goto
 local function goto(targetPlayer)
     if not targetPlayer or not targetPlayer.Character then
@@ -478,8 +642,13 @@ local function listentoOwner()
 
     while true do
         wait(0.01)
+
+        if cmdmaster == true then
+
         local Getcmd = Xeno.GetGlobal("__cmd") or {}
         local arg1 = Getcmd["arg1"] or ""
+        local arg2 = Getcmd["arg2"] or ""
+        local arg3 = Getcmd["arg3"] or ""
         local idcmd = Getcmd["Idcmd"]
 
         if Getcmd["Token"] ~= localToken then
@@ -494,7 +663,6 @@ local function listentoOwner()
             spawn(loop)
 
             elseif idcmd == 14 then -- goto
-            print("arg1: "..arg1)
             local targetPlayer = findPlayerByName(arg1)
             if targetPlayer then
               goto(targetPlayer)
@@ -502,14 +670,32 @@ local function listentoOwner()
                 warn("Player not Found: "..targetPlayer)
             end
 
+            elseif idcmd == 20 then -- orbit
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer(targetPlayer, speed, distance)
+
+            elseif idcmd == 57 then -- circle
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+            tpcircle(targetPlayer, distance)
+
+            elseif idcmd == 5 then -- quit
+                cmdmaster = false
+                getgenv().Luasu = false
+
+            elseif idcmd == 29 then -- unorbit
+                orbitbool = false
             elseif idcmd == 0 then
-            
+
             end
+        end
         end
     end
 end
 
 spawn(function() listentoOwner() end)
 getgenv().Luasu = true
-
 end -- FINAL END
