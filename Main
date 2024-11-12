@@ -10,41 +10,6 @@
         credit me if you take code from here to make a script related to bots please :)
         Have fun making sense of all this mess
 
-
-    Tip: ctrl + F to search for what you need
-
-    Summary:
-
-        KEYWORD                      INFO
-
-    -   Global Services              | Service Roblox used for bots and Owner
-    -   Global variables             | Variables used by bots and owner
-    -   Global Functions             | Functions Variables used by bots and owner
-    -   Main Script                  | where the script differentiates between a "bot" instance and an "Owner" instance and distributes 2 different scripts
-    -   GlobalTab                    |
-    -   UsualTab                     |
-    -   FunnyTab                     |
-    -   MiscTab                      |
-    -   OffensiveTab                 |
-    -   CommunicationTab             |
-    -   OtherTab                     |
-    -   ShapeTab                     |
-    -   HelpTab                      |
-    -   AboutTab                     |
-    -   BOT PART                     | where the bot script part of the script begins
-    -   FINAL END                    | The end of the 'Main Script'
-    -   COMMANDS ID                  | all command IDs
-    -   Bot services                 |
-    -   Bot variables                |
-    -   Bot functions                |
-    -   TOKEN                        | to differentiate commands
-    -   LISTEN TO EXECUTOR VARIABLES | the part of the bots' script that listens to the commands sent by the Owner
-    -   Command controller           | the place where the bot will execute functions based on commands
-    -   
-    -   
-                    UNFINISHED
-
-
 ]]
 
 -- Global Services
@@ -233,7 +198,7 @@ local function LoadGUI() -- AFTER LOAD
     local GlobalTab = Window:CreateTab("Global", 4483362458)
     local UsualTab = Window:CreateTab("Usual", 4483362458)
     local FunnyTab = Window:CreateTab("Funny", 4483362458)
-    local MiscTab = Window:CreateTab("Misc", 4483362458)
+    local MiscellaneousTab = Window:CreateTab("Miscellaneous", 4483362458)
     local OffensiveTab = Window:CreateTab("Offensive", 4483362458)
     local CommunicationTab = Window:CreateTab("Communication", 4483362458)
     local OtherTab = Window:CreateTab("Other", 4483362458)
@@ -257,7 +222,24 @@ local Button = GlobalTab:CreateButton({
     end,
  })
 
-    local Section = GlobalTab:CreateSection("Global")
+local Section = GlobalTab:CreateSection("Global")
+
+local Input = GlobalTab:CreateInput({
+    Name = "Fps [number]",
+    PlaceholderText = "[number]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(fps)
+        local command = "fps"
+        local commandID = getcmdID(command)
+        local AToken = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = AToken,
+            ["arg1"] = fps
+        })
+    end,
+ })
+
     local Toggle = GlobalTab:CreateToggle({
         Name = "Anti-AFK",
         CurrentValue = false,
@@ -292,6 +274,24 @@ local Input = UsualTab:CreateInput({
     end,
  })
 
+--[[
+local Input = UsualTab:CreateInput({
+    Name = "Dance [number]",
+    PlaceholderText = "1-3",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(number)
+        local command = "dance"
+        local commandID = getcmdID(command)
+        local AToken = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = AToken,
+            ["arg1"] = number
+        })
+    end,
+})
+]]
+
 --FunnyTab
 local Section = FunnyTab:CreateSection("Orbit")
 local Input = FunnyTab:CreateInput({
@@ -310,7 +310,102 @@ local Input = FunnyTab:CreateInput({
             ["arg2"] = arg2,
             ["arg3"] = arg3
         })
-    end, 
+    end,
+})
+
+local Input = FunnyTab:CreateInput({
+    Name = "orbit2 [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit2"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end,
+})
+
+local Input = FunnyTab:CreateInput({
+    Name = "orbit3 [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit3"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end,
+})
+
+local Input = FunnyTab:CreateInput({
+    Name = "orbit4 [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit4"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end,
+})
+
+local Input = FunnyTab:CreateInput({
+    Name = "orbit5 [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit5"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end,
+})
+
+local Input = FunnyTab:CreateInput({
+    Name = "orbit6 [plr] [radius] [speed]",
+    PlaceholderText = "[plr] [radius] [speed]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(Text)
+        local command = "orbit6"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        local arg1, arg2, arg3 = Text:match("([^%s]+)%s+([^%s]+)%s+([^%s]+)")
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = arg1,
+            ["arg2"] = arg2,
+            ["arg3"] = arg3
+        })
+    end,
 })
 
 local Button = FunnyTab:CreateButton({
@@ -325,7 +420,25 @@ local Button = FunnyTab:CreateButton({
         })
     end,
  })
---MiscTab
+
+--MiscellaneousTab
+local Section = MiscellaneousTab:CreateSection("Miscellaneous")
+local Input = MiscellaneousTab:CreateInput({
+    Name = "worm [player]",
+    PlaceholderText = "[player]",
+    RemoveTextAfterFocusLost = false,
+    Callback = function(plr)
+        local command = "worm"
+        local commandID = getcmdID(command)
+        local Token = generateToken()
+        Xeno.SetGlobal("__cmd", {
+            ["Idcmd"] = commandID,
+            ["Token"] = Token,
+            ["arg1"] = plr
+        })
+    end,
+})
+
 --OffensiveTab
 
 --CommunicationTab
@@ -345,6 +458,8 @@ local Button = FunnyTab:CreateButton({
             })
         end,
     })
+
+    local FERUOIJFESOUJ = CommunicationTab:CreateParagraph({Title = "Tip", Content = "you can say /e dance to make them dance!"})
 
 --OtherTab
 
@@ -450,6 +565,7 @@ local Players = game:GetService("Players")
 
 -- Bot variables
 local orbitbool = false
+local wormbool = false
 local botIndexTable = Xeno.GetGlobal("__Index")
 local BotIndex = nil
 local cmdmaster = true
@@ -526,7 +642,6 @@ local function removeVelocity()
   local function orbitPlayer(AtargetPlayer, speed, r)
     local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
     orbitbool = true
-
     if r == 0 then
         r = 0.0001
     end
@@ -534,13 +649,11 @@ local function removeVelocity()
     local playerCharacter = player.Character
     local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
     if not playerHumanoidRootPart then
-        print("not playerHumanoidRootPart")
         return
     end
 
     local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
     if not targetHumanoidRootPart then
-        print("not targetHumanoidRootPart")
         return
     end
 
@@ -554,14 +667,242 @@ local function removeVelocity()
         removeVelocity()
 
         local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(0, math.rad(rotation), 0) * CFrame.new(r, 0, 0)
-
         playerHumanoidRootPart.CFrame = newCFrame
-
         local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
         playerHumanoidRootPart.CFrame = lookAtCFrame
-
         rotation = (rotation + speed) % 360
     end)
+end
+
+-- orbit2
+local function orbitPlayer2(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(math.rad(rotation), math.rad(rotation), 0) * CFrame.new(r, 0, 0)
+        playerHumanoidRootPart.CFrame = newCFrame
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- orbit3
+local function orbitPlayer3(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(math.rad(rotation), math.rad(rotation), math.rad(rotation)) * CFrame.new(r, 0, 0)
+        playerHumanoidRootPart.CFrame = newCFrame
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- orbit4
+local function orbitPlayer4(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(math.rad(rotation),0, math.rad(rotation)) * CFrame.new(r, 0, 0)
+        playerHumanoidRootPart.CFrame = newCFrame
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- orbit5
+local function orbitPlayer5(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(math.rad(math.random(0, 360)), math.rad(math.random(0, 360)), math.rad(math.random(0, 360))) * CFrame.new(r, 0, 0)
+        playerHumanoidRootPart.CFrame = newCFrame
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- orbit6
+local function orbitPlayer6(AtargetPlayer, speed, r)
+    local targetPlayer = Players:FindFirstChild(AtargetPlayer) --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT --THIS IS REALLY IMPORTANT
+    orbitbool = true
+    if r == 0 then
+        r = 0.0001
+    end
+
+    local playerCharacter = player.Character
+    local playerHumanoidRootPart = playerCharacter and playerCharacter:FindFirstChild("HumanoidRootPart")
+    if not playerHumanoidRootPart then
+        return
+    end
+
+    local targetHumanoidRootPart = targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart")
+    if not targetHumanoidRootPart then
+        return
+    end
+
+    local rotation = indexcircle
+    local orbitConnection
+    orbitConnection = RunService.Heartbeat:Connect(function()
+        if not orbitbool or not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+            orbitConnection:Disconnect()
+            return
+        end
+        removeVelocity()
+
+        local newCFrame = CFrame.new(targetHumanoidRootPart.Position) * CFrame.Angles(math.rad(math.random(0, 360)), math.rad(math.random(0, 360)), 0) * CFrame.new(r, 0, 0)
+        playerHumanoidRootPart.CFrame = newCFrame
+        local lookAtCFrame = CFrame.new(playerHumanoidRootPart.Position, targetHumanoidRootPart.Position)
+        playerHumanoidRootPart.CFrame = lookAtCFrame
+        rotation = (rotation + speed) % 360
+    end)
+end
+
+-- worm
+local function worm(msgtarget2)
+    local username = player.Name
+    local botIndexTable = Xeno.GetGlobal("__Index")
+    local BotIndex = botIndexTable[username]
+
+    if not BotIndex then
+        print("BotIndex not found please kill me " .. username)
+        return
+    end
+
+    if BotIndex > 1 then
+        local previousIndexName
+        for name, index in pairs(botIndexTable) do
+            if index == BotIndex - 1 then
+                previousIndexName = name
+                break
+            end
+        end
+
+        if previousIndexName then
+            local targetPlayer = Players:FindFirstChild(previousIndexName)
+            if targetPlayer then
+                wormbool = true
+
+                while wormbool and targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") do
+                    local humanoidRootPart = targetPlayer.Character.HumanoidRootPart
+                    player.Character.Humanoid:MoveTo(humanoidRootPart.Position)
+                    wait(0.1)
+                end
+            else
+                print("no target " .. previousIndexName)
+            end
+        else
+            print("no index -1 for " .. username)
+        end
+    else
+        if msgtarget2 and msgtarget2.Character and msgtarget2.Character:FindFirstChild("HumanoidRootPart") then
+            followbool = true
+
+            while followbool and msgtarget2 and msgtarget2.Character and msgtarget2.Character:FindFirstChild("HumanoidRootPart") do
+                local humanoidRootPart = msgtarget2.Character.HumanoidRootPart
+                player.Character.Humanoid:MoveTo(humanoidRootPart.Position)
+                wait(0.1)
+            end
+        else
+            print("error worm 4")
+        end
+    end
 end
 
 -- circle
@@ -632,7 +973,7 @@ if type(botIndexTable) == "table" then
     end
 
     if BotIndex then
-        chatMessage("Index: " .. BotIndex)
+        --chatMessage("Index: " .. BotIndex)
     end
 end
 
@@ -640,10 +981,8 @@ end
 local function listentoOwner()
     local localToken = "autistic/acoustic"
 
-    while true do
-        wait(0.01)
-
-        if cmdmaster == true then
+    while cmdmaster == true do
+        wait(0.1) -- old was 0.01 maybe the cause of frequent executor crash
 
         local Getcmd = Xeno.GetGlobal("__cmd") or {}
         local arg1 = Getcmd["arg1"] or ""
@@ -671,11 +1010,52 @@ local function listentoOwner()
             end
 
             elseif idcmd == 20 then -- orbit
+                orbitbool = false
                 local targetPlayer = tostring(findPlayerByName(arg1))
                 local distance = arg2
                 local speed = arg3
                 orbitbool = true
                 orbitPlayer(targetPlayer, speed, distance)
+
+                elseif idcmd == 21 then -- orbit2
+                orbitbool = false
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer2(targetPlayer, speed, distance)
+
+                elseif idcmd == 22 then -- orbit3
+                orbitbool = false
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer3(targetPlayer, speed, distance)
+
+                elseif idcmd == 23 then -- orbit4
+                orbitbool = false
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer4(targetPlayer, speed, distance)
+
+                elseif idcmd == 24 then -- orbit5
+                orbitbool = false
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer5(targetPlayer, speed, distance)
+
+                elseif idcmd == 25 then -- orbit6
+                orbitbool = false
+                local targetPlayer = tostring(findPlayerByName(arg1))
+                local distance = arg2
+                local speed = arg3
+                orbitbool = true
+                orbitPlayer6(targetPlayer, speed, distance)
 
             elseif idcmd == 57 then -- circle
                 local targetPlayer = tostring(findPlayerByName(arg1))
@@ -686,12 +1066,26 @@ local function listentoOwner()
                 cmdmaster = false
                 getgenv().Luasu = false
 
+                --elseif idcmd == 15 then -- dance
+                --chatMessage("/e dance" .. tostring(arg1))
+
+                elseif idcmd == 9 then -- fps
+                setfpscap(arg1)
+
+                elseif idcmd == 32 then -- worm
+                wormbool = false
+                wormbool = true
+                local Tplayer = arg1
+                worm(Tplayer)
+
+                elseif idcmd == 33 then -- unworm
+                wormbool = false
+
             elseif idcmd == 29 then -- unorbit
                 orbitbool = false
             elseif idcmd == 0 then
 
             end
-        end
         end
     end
 end
